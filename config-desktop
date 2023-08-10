@@ -15,14 +15,15 @@ set $menu exec wofi --show drun
 
 # Named Workspaces and Physical Displays
 workspace 1 output "Iiyama North America PL2760H 1164001001057"
-workspace 2 output "Philips Consumer Electronics Company PHILIPS FTV 0x00000101"
+workspace 2 output "Iiyama North America PL2760H 1164001001057"
 workspace 3 output "Iiyama North America PL2760H 1164001001057"
 workspace 4 output "Iiyama North America PL2760H 1164001001057"
 workspace 5 output "Iiyama North America PL2760H 1164001001057"
 workspace 6 output "Iiyama North America PL2760H 1164001001057"
 workspace 7 output "Iiyama North America PL2760H 1164001001057"
-workspace 8 output "Iiyama North America PL2760H 1164001001057"
-workspace 9 output "Iiyama North America PL2760H 1164001001057"
+workspace 8 output "Philips Consumer Electronics Company PHILIPS FTV 0x00000101"
+workspace 9 output "Philips Consumer Electronics Company PHILIPS FTV 0x00000101"
+workspace 10 output "Philips Consumer Electronics Company PHILIPS FTV 0x00000101"
 
 # Window Titles Alignment
 title_align center
@@ -43,6 +44,9 @@ client.placeholder        #00ced1        #00ced1          #ffffff       #00ced1 
 output 'Iiyama North America PL2760H 1164001001057' position 0 1080 mode 1920x1080@144Hz
 output 'Philips Consumer Electronics Company PHILIPS FTV 0x00000101' position 0 0
 
+# Default Wallpaper
+output * bg /home/squid/Pictures/micro-org-hd.jpg fill
+
 # Border Styling
 default_border pixel 2
 
@@ -52,22 +56,72 @@ gaps inner 16
 # Keyboard Layout
 input * xkb_layout gb
 
-# Default Wallpaper
-output * bg /home/squid/Pictures/micro-org-hd.jpg fill
 
 # Export Data Directories
 exec_always export XDG_DATA_DIRS="$XDG_DATA_DIRS:~/.local/share"
 
 # Swayidle Configuration (Screen Sleep)
 exec swayidle \
-  timeout 300 'swaymsg "output * dpms off"' \
-  resume 'swaymsg "output * dpms on"'
+  timeout 10000 'output dpms off"' \
+  resume 'swaymsg "output Output dpms on"'
+
+# Move Steam window to scratchpad
+for_window [class="steam"] move scratchpad
+
+# Move KeePassXC window to scratchpad
+for_window [class="KeePassXC"] move scratchpad
+
+# Move KeePassXC window to scratchpad
+for_window [app_id="KeePassXC"] move scratchpad
 
 # Move Mullvad VPN window to scratchpad
 for_window [class="Mullvad VPN"] move scratchpad
 
-# Assign FreeTube to Workspace 2
-assign [class="FreeTube"] workspace 2
+# Assign rtorrent to Workspace 7
+assign [app_id="rtorrent"] workspace 7
+for_window [app_id="rtorrent"] splitv
+
+# Assign gomuks to Workspace 7
+assign [app_id="gomuks"] workspace 7
+for_window [app_id="gomuks"] splith
+
+# Assign nvtop to Workspace 7
+assign [app_id="nvtop"] workspace 7
+for_window [app_id="nvtop"] splitv
+
+# Assign gotop to Workspace 7
+assign [app_id="gotop"] workspace 7
+for_window [app_id="gotop"] splith
+
+# Assign FreeTube to Workspace 10
+assign [class="FreeTube"] workspace 10
+
+# Floating
+
+# photo veiwer set floating
+for_window [class="0x4200001"] floating enable
+for_window [app_id="0x4200001"] floating enable
+
+for_window [app_id="engrampa"] floating enable
+for_window [app_id="engrampa"] resize set 800px 800px
+
+for_window [app_id="nmtui"] floating enable
+for_window [app_id="nmtui"] resize set 600px 500px
+
+for_window [app_id="ncpm"] floating enable
+for_window [app_id="ncpm"] resize set 700px 600px
+
+for_window [app_id="btop"] floating enable
+for_window [app_id="btop"] resize set 800px 800px
+
+for_window [app_id="powermenu"] move position 200px 300px
+for_window [app_id="powermenu"] floating enable
+for_window [app_id="powermenu"] resize set 210px 200px
+
+for_window [app_id="zenity"] floating enable
+
+# polkit
+exec "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
 
 # Key bindings -------------------------------------------------------
 # Basics:
@@ -76,9 +130,9 @@ bindsym $mod+Shift+q kill
 bindsym $mod+d exec $menu
 floating_modifier $mod normal
 bindsym $mod+Shift+c reload
-bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+bindsym $mod+p exec grim
 
-# Moving around:
+#moving around:
 bindsym $mod+$left focus left
 bindsym $mod+$down focus down
 bindsym $mod+$up focus up
@@ -108,6 +162,11 @@ bindsym $mod+7 workspace number 7
 bindsym $mod+8 workspace number 8
 bindsym $mod+9 workspace number 9
 bindsym $mod+0 workspace number 10
+
+bindsym Ctrl+Right workspace next
+
+bindsym Ctrl+Left workspace prev
+
 
 bindsym $mod+Shift+1 move container to workspace number 1
 bindsym $mod+Shift+2 move container to workspace number 2
@@ -159,9 +218,31 @@ bindsym $mod+r mode "resize"
 
 # Status Bar:
 bar {
-    swaybar_command waybar 
+    swaybar_command waybar
 }
+
+#bar {
+#    position bottom
+#    swaybar_command waybar
+#}
+
+# Start Steam
+exec steam
+
+# Start Mullvad
+exec mullvad-vpn
+
+# Start KeePassXC
+exec keepassxc
+
+# Start sunshine
+exec sunshine stream
+
+# Start TUIs
+exec ~/.config/sway/tuiluanchscrip.sh
+
+# Start mako
+exec mako
 
 # Include additional configuration files
 include /etc/sway/config.d/*
-
