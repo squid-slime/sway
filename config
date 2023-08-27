@@ -1,0 +1,180 @@
+# Variables
+set $mod Mod4
+set $left h
+set $down j
+set $up k
+set $right l
+set $term foot
+set $menu exec wofi --show drun
+
+# Enable XWayland
+xwayland enable
+
+# Neon Color Scheme for Sway
+# class ------------------border--------background--------text--------indicator--------child_border
+client.focused            #ff00ff        #ff00ff          #ffffff       #ff00ff           #ff00ff
+client.focused_inactive   #00ced1        #00ced1          #ffffff       #00ced1           #00ced1
+client.focused_tab_title  #ff00ff        #ff00ff          #ffffff       #ff00ff           #ff00ff
+client.unfocused          #00ced1        #00ced1          #ffffff       #00ced1           #00ced1
+client.urgent             #ff00ff        #ff00ff          #ffffff       #ff00ff           #ff00ff
+client.placeholder        #00ced1        #00ced1          #ffffff       #00ced1           #00ced1
+
+# Screen Configuration with 4K support
+output 'LG Display 0x0555 0x000010A1' scale 2 
+
+# Stylus
+input 1118:2463:IPTS_045E:099F_Stylus map_to_output eDP-1
+
+# Border Styling
+default_border pixel 2
+
+# Gaps screen edge
+gaps inner 16
+
+# Keyboard Layout
+input * xkb_layout gb
+
+# Export Data Directories
+exec_always export XDG_DATA_DIRS="$XDG_DATA_DIRS:~/.local/share"
+
+# Swayidle Configuration (Screen Sleep)
+exec swayidle \
+  timeout 300 'swaymsg "output * dpms off"' \
+  resume 'swaymsg "output * dpms on"'
+
+# Move Mullvad VPN window to scratchpad
+for_window [class="Mullvad VPN"] move scratchpad
+
+# Move keepassxc window to scratchpad
+for_window [class="keepassxc"] move scratchpad
+
+# Assign FreeTube to Workspace 9
+#assign [class="FreeTube"] workspace 9
+
+# Assign moonlight to Workspace 0
+##assign [class="Moonlight"] workspace 0
+
+# Key bindings -------------------------------------------------------
+#Touch Gestures
+# Add a new touchpad binding to launch Wofi
+bindgesture swipe:up wofi -d
+
+# Add touchpad bindings to switch to next/previous workspace
+bindgesture swipe:left workspace next
+bindgesture swipe:right workspace prev
+
+# Add a touchpad binding to cycle through scratchpad windows
+bindgesture pinch:outward [con_mark="__scratchpad"] focus
+
+# Add a touchpad binding to send a focused window to the scratchpad
+bindgesture pinch:inward move scratchpad
+
+# Basics:
+bindsym $mod+Return exec $term
+bindsym $mod+Shift+q kill
+bindsym $mod+d exec $menu
+floating_modifier $mod normal
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+
+# Moving around:
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# Workspaces:
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+
+# Layout stuff:
+bindsym $mod+b splith
+bindsym $mod+v splitv
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+bindsym $mod+f fullscreen
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+bindsym $mod+a focus parent
+
+# Media Keys
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5% && pkill -RTMIN+1 swaybar
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5% && pkill -RTMIN+1 swaybar
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle && pkill -RTMIN+1 swaybar
+
+# Scratchpad:
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+# Resizing containers:
+mode "resize" {
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# Status Bar:
+bar {
+    swaybar_command waybar 
+}
+
+# Include additional configuration files
+include /etc/sway/config.d/*
+
+# type coverscript
+exec ~/.config/sway/typecover-remove_virtkb.sh
+
+# moonlight auto start
+# exec moonlight
+
+# mullvad auto start
+exec mullvad
+
+# keepassxc auto start
+exec keepassxc
+
+# touchsceen kb
+exec wvkbd-mobintl -L 250
