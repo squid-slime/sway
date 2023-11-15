@@ -26,6 +26,7 @@ workspace 7 output "Iiyama North America PL2760H 1164001001057"
 workspace 8 output "Philips Consumer Electronics Company PHILIPS FTV 0x00000101"
 workspace 9 output "Philips Consumer Electronics Company PHILIPS FTV 0x00000101"
 workspace 10 output "Philips Consumer Electronics Company PHILIPS FTV 0x00000101"
+workspace 11 output "VKK VK1160 0x00002828"
 
 # Window Titles Alignment
 title_align center
@@ -42,9 +43,15 @@ client.unfocused          #00ced1        #00ced1          #ffffff       #00ced1 
 client.urgent             #ff00ff        #ff00ff          #ffffff       #ff00ff           #ff00ff
 client.placeholder        #00ced1        #00ced1          #ffffff       #00ced1           #00ced1
 
-#Screen Configuration
-output 'Iiyama North America PL2760H 1164001001057' position 0 1080 mode 1920x1080@144Hz
-output 'Philips Consumer Electronics Company PHILIPS FTV 0x00000101' position 0 0
+#Screen Configuration 
+### "swaymsg -t get_outputs"
+output 'Philips Consumer Electronics Company PHILIPS FTV 0x00000101' pos 0 0 res 1920x1080@60Hz
+output 'Iiyama North America PL2760H 1164001001057' pos 0 1080 res 1920x1080@143.981Hz
+output 'VKK VK1160 0x00002828' pos 0 2160 res 1920x1080@60Hz
+
+# Stylus
+input 48879:57005:Touchscreen_passthrough map_to_output 'VKK VK1160 0x00002828'
+input 12267:4101:VEIKK.INC_VK1200_Mouse map_to_output 'VKK VK1160 0x00002828'
 
 # Default Wallpaper
 output * bg /home/squid/Pictures/micro-org-hd.jpg fill
@@ -64,8 +71,8 @@ exec_always export XDG_DATA_DIRS="$XDG_DATA_DIRS:~/.local/share"
 
 # Swayidle Configuration (Screen Sleep)
 exec swayidle \
-timeout 300 'swaymsg "output * dpms off"' \
-resume 'swaymsg "output * dpms on"'
+timeout 300 'swaymsg "output DP-2 dpms off"' \
+resume 'swaymsg "output DP-2 dpms on"'
 
 ############## scratchpad
 
@@ -264,3 +271,4 @@ exec mako
 
 # Include additional configuration files
 include /etc/sway/config.d/*
+
