@@ -1,3 +1,4 @@
+  GNU nano 7.2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  /home/squid/.config/sway/config                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 # Default config for sway
 #
 # Copy this to ~/.config/sway/config and edit it to your liking.
@@ -43,7 +44,7 @@ client.unfocused          #00ced1        #00ced1          #ffffff       #00ced1 
 client.urgent             #ff00ff        #ff00ff          #ffffff       #ff00ff           #ff00ff
 client.placeholder        #00ced1        #00ced1          #ffffff       #00ced1           #00ced1
 
-#Screen Configuration 
+#Screen Configuration
 ### "swaymsg -t get_outputs"
 output 'Philips Consumer Electronics Company PHILIPS FTV 0x00000101' pos 0 0 res 1920x1080@60Hz
 output 'Iiyama North America PL2760H 1164001001057' pos 0 1080 res 1920x1080@143.981Hz
@@ -76,49 +77,56 @@ resume 'swaymsg "output DP-2 dpms on"'
 
 ############## scratchpad
 
-# Move KeePassXC window to scratchpad
-for_window [class="KeePassXC"] move scratchpad
-
-# Move KeePassXC window to scratchpad
-for_window [app_id="KeePassXC"] move scratchpad
-
 # Move Mullvad VPN window to scratchpad
 for_window [class="Mullvad VPN"] move scratchpad
+
+# move ckb-next to scratchpad
+for_window [app_id="ckb-next"] move scratchpad
 
 ############# workspaces
 
 # Assign rtorrent to Workspace 7
 assign [app_id="rtorrent"] workspace 7
-for_window [app_id="rtorrent"] splitv
 
 # Assign gomuks to Workspace 7
 assign [app_id="gomuks"] workspace 7
-for_window [app_id="gomuks"] splith
 
 # Assign nvtop to Workspace 7
 assign [app_id="nvtop"] workspace 7
-for_window [app_id="nvtop"] splitv
 
 # Assign gotop to Workspace 7
 assign [app_id="gotop"] workspace 7
-for_window [app_id="gotop"] splith
 
 # Assign FreeTube to Workspace 10
 assign [class="FreeTube"] workspace 10
 
+# Assign steam contraints
+# for_window [app_id="steam" title="0x2E00010"] move position 0 0
+for_window [title="Friends List"] move position 4000 200
+
 ########### Floating
 
-# set steam floating             
-for_window [class="steam"] floating enable
+# set firefox floating
+for_window [class="firefox"] floating enable
+
+# set r2modman floating
+for_window [class="r2modman"] floating enable
+
+# set keepassxc floating
+for_window [app_id="org.keepassxc.KeePassXC"] floating enable
+
+# set ckb-next floating
+# for_window [app_id="ckb-next"] floating enable
+
+# set steam floating
+# for_window [class="steam"] floating enable
 
 # Assign Engrampa to floating
-for_window [class="Engrampa"] foating enable
 for_window [app_id="engrampa"] floating enable
 for_window [app_id="engrampa"] resize set 800px 800px
 
 # Assign nemo to floating
 for_window [app_id="nemo"] foating enable
-for_window [class="nemo"] foating enable
 
 # photo veiwer set floating
 for_window [class="0x4200001"] floating enable
@@ -138,7 +146,6 @@ for_window [app_id="btop"] floating enable
 for_window [app_id="btop"] resize set 800px 800px
 
 # power menu tui opened with waybar
-for_window [app_id="powermenu"] move position 200px 300px
 for_window [app_id="powermenu"] floating enable
 for_window [app_id="powermenu"] resize set 210px 200px
 
@@ -148,8 +155,6 @@ for_window [app_id="zenity"] floating enable
 for_window [app_id="calendar"] floating enable
 for_window [app_id="calendar"] resize set 1300px 800px
 
-# polkit
-exec "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
 
 # Key bindings -------------------------------------------------------
 # Basics:
@@ -159,6 +164,17 @@ bindsym $mod+d exec $menu
 floating_modifier $mod normal
 bindsym $mod+Shift+c reload
 bindsym $mod+p exec grim
+
+############ Screanshot prtscn
+# capture all screens to clipboard
+bindsym Shift+Print exec grim - | wl-copy
+
+# capture the specified screen area to clipboard
+bindsym Shift+Alt+Print exec grim -g "$(slurp)" - | wl-copy
+
+# capture the focused monitor to clipboard
+bindsym Shift+Control+Print exec grim -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') - | wl-copy
+#############
 
 #moving around:
 bindsym $mod+$left focus left
@@ -258,17 +274,22 @@ bar {
 exec mullvad-vpn
 
 # Start KeePassXC
-exec keepassxc
+exec ~/.local/share/applications/org.keepassxc.KeePassXC.desktop
 
 # Start sunshine
 exec sunshine stream
 
 # Start TUIs
-exec ~/.config/sway/tuiluanchscrip.sh
+# exec keepassxc %f
 
 # Start mako
 exec mako
 
+# Start CKB
+exec ckb-next
+
+# polkit
+exec "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
+
 # Include additional configuration files
 include /etc/sway/config.d/*
-
