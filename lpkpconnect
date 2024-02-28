@@ -1,0 +1,35 @@
+#!/bin/bash
+
+DEVICE_IDENTIFIER="1118:2496:Microsoft_Surface_Type_Cover_Tablet_Mode_Switch"
+APP_NAME="waybar-touch"
+
+# Initial state to ensure proper handling on script start
+last_state="disconnected"
+
+while true; do
+    # Get the PID of the target application
+    APP_PID=$(pidof "$APP_NAME")
+
+    # Check if the device exists
+    if swaymsg -t GET_INPUTS | grep -q "$DEVICE_IDENTIFIER"; then
+        if [ "$last_state" == "disconnected" ]; then
+            echo "Typecover connected, opening Waybar"
+            if [[ -n "$APP_PID" ]]; then
+                echo "Sending SIGUSR1 to PID: $APP_PID"
+                kill -USR1 "$APP_PID"
+            fi
+            last_state="connected"
+        fi
+    else
+        if [ "$last_state" == "connected" ]; then
+            echo "Typecover disconnected, closing Waybar"
+            if [[ -n "$APP_PID" ]]; then
+                echo "Sending SIGUSR2 to PID: $APP_PID"
+                kill -USR2 "$APP_PID"
+            fi
+            last_state="disconnected"
+        fi
+    fi
+
+    sleep 1
+done
