@@ -1,4 +1,4 @@
-# Default config for swayfx
+# Default config for sway
 #
 # Copy this to ~/.config/sway/config and edit it to your liking.
 #
@@ -71,9 +71,19 @@ gaps inner 16
 # Keyboard Layout
 input * xkb_layout gb
 
-# Enable shadows
+
+#set blureffect 1>10 0>2
 shadows enable
-shadow_blur_radius 40
+# shadow_blur_radius 1
+blur_contrast 1
+blur_saturation 0.8
+blur_brightness 2
+blur_radius 7
+blur_passes 2
+
+# blur waybar wofi
+layer_effects "wofi" blur enable; shadows enable
+layer_effects "waybar" blur enable; shadows enable; corner_radius 15
 
 # xray
 blur_xray disable
