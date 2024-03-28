@@ -16,9 +16,9 @@ enable_notifications = True        # CAPITALIZE first letter True False
 
 def set_gaps(connection, workspace, num_windows):
     try:
-        gap_size_hoz = None            #
-        gap_size_ver = None            # leave these at 0
-        gap_size_inner = None          #
+        gap_size_hoz = None            
+        gap_size_ver = None            
+        gap_size_inner = None          
 
         if num_windows == 1:
             gap_size_hoz = 500      # set horizontal gaps
