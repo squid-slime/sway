@@ -12,7 +12,7 @@ if NOTIFY_AVAILABLE:
     notify2.init("Dynamic Gaps")
 
 # flag to control notifications
-enable_notifications = True        # CAPITALIZE first letter True False
+enable_notifications = False        # CAPITALIZE first letter True False
 
 def set_gaps(connection, workspace, num_windows):
     try:
